@@ -4,7 +4,10 @@ public class TableData {
 	
 	private String strParaName;
 	private String strModValue;
+	private String strPartOrgValue;
+	private String strPartModValue;
 	private Boolean boolURLEncode;
+	private Boolean boolPartMod;
 	private int tableCount;
 	private Boolean boolRepeater;
 	private Boolean boolIntruder;
@@ -52,5 +55,23 @@ public class TableData {
 	public void setStrModValue(String strModValue) {
 		this.strModValue = strModValue;
 	}
-
+	public Boolean getBoolPartMod() {
+		return boolPartMod;
+	}
+	public void setBoolPartMod(Boolean boolPartMod) {
+		this.boolPartMod = boolPartMod;
+	}
+	public String getStrPartOrgValue() {
+		return strPartOrgValue;
+	}
+	public void setStrPartOrgValue(String strPartOrgValue) {
+		this.strPartOrgValue = strPartOrgValue;
+	}
+	public String getStrPartModValue() {
+		return strPartModValue;
+	}
+	public void setStrPartModValue(String strPartModValue) {
+		this.strPartModValue = strPartModValue;
+	}
+	
 }

@@ -32,7 +32,7 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
 		// TODO Auto-generated method stub
 		this.callbacks = callbacks;
 		helpers = callbacks.getHelpers();
-		callbacks.setExtensionName("URLEncoder");
+		callbacks.setExtensionName("ParameterModify");
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			
@@ -41,9 +41,9 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
 				// TODO Auto-generated method stub
 				jPanel = new JPanel();
 				
-				Object[] columNames = {"ParameterNames", "URLEncode", "ModifyValues"};
-				Object[][] data = {{new String(""), new Boolean(false), new String("")}};
-				Object[] object = {new String(""), new Boolean(false), new String("")};
+				Object[] columNames = {"ParameterNames", "URLEncode", "PartModyfy", "ModifyValues", "PartOrgValue", "PartModValue"};
+				Object[][] data = {{new String(""), new Boolean(false), new Boolean(false), new String(""), new String(""), new String("")}};
+				Object[] object = {new String(""), new Boolean(false), new Boolean(false), new String(""), new String(""), new String("")};
 				
 				DefaultTableModel defaultTableModel = new MyTableModel(data, columNames);
 				
@@ -93,7 +93,10 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
 								TableData tableData = new TableData();
 								tableData.setStrParaName(defaultTableModel.getValueAt(i, 0).toString());
 								tableData.setBoolURLEncode((Boolean) defaultTableModel.getValueAt(i, 1));
-								tableData.setStrModValue(defaultTableModel.getValueAt(i, 2).toString());
+								tableData.setBoolPartMod((Boolean) defaultTableModel.getValueAt(i, 2));
+								tableData.setStrModValue(defaultTableModel.getValueAt(i, 3).toString());
+								tableData.setStrPartOrgValue(defaultTableModel.getValueAt(i, 4).toString());
+								tableData.setStrPartModValue(defaultTableModel.getValueAt(i, 5).toString());
 								tableData.setTableCount(rowCount);
 								arrayList.add(tableData);
 								
@@ -139,7 +142,11 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
 				String setSearchName = "";
 				String setReplaceValue = "";
 				Boolean urlEncodeCheck = false;
+				String getPartOrgValue = "";
+				String setPartModValue = "";
+				Boolean partModCheck = false;
 				StringBuilder stringBuilder;
+				String getReplaceValue = "";
 				
 				String request = new String(messageInfo.getRequest());
 				
@@ -147,6 +154,9 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
 					setSearchName = arrayList.get(i).getStrParaName();
 					urlEncodeCheck = arrayList.get(i).getBoolURLEncode();
 					setReplaceValue = arrayList.get(i).getStrModValue();
+					getPartOrgValue = arrayList.get(i).getStrPartOrgValue();
+					setPartModValue = arrayList.get(i).getStrPartModValue();
+					partModCheck = arrayList.get(i).getBoolPartMod();
 
 					searchValue = setSearchName + "=";
 					String scanLine = "";
@@ -185,15 +195,26 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
 							endValue = endValue + startValue;
 						}
 					}
-					if (setReplaceValue.equals("") || setReplaceValue == null) {
-						setReplaceValue = request.substring(startValue, endValue);
+					stringBuilder = new StringBuilder(request);
+					
+					if (partModCheck = true) {
+						getReplaceValue = stringBuilder.substring(startValue, endValue);
+						if (getReplaceValue.indexOf(getPartOrgValue) != -1) {
+							StringBuilder builderReplaceValue = new StringBuilder(getReplaceValue);
+							builderReplaceValue.replace(getReplaceValue.indexOf(getPartOrgValue), setPartModValue.length(), setPartModValue);
+							setReplaceValue = new String(builderReplaceValue); 
+						}
+						
+					} else {
+						if (setReplaceValue.equals("") || setReplaceValue == null) {
+							setReplaceValue = request.substring(startValue, endValue);
+						}
 					}
 
 					if (urlEncodeCheck = true) {
 						setReplaceValue = URLEncoder.encode(setReplaceValue, "UTF-8");
 					}
 					
-					stringBuilder = new StringBuilder(request);
 					stringBuilder.replace(startValue, endValue, setReplaceValue);
 					request = new String(stringBuilder);
 				}

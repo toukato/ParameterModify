@@ -5,7 +5,11 @@
 Table項目<br />
 ParameterNames: 置換対象のパラメータを指定<br />
 URLEncode: URLエンコードするかのチェックボックス<br />
+PartModyfy: 値の一部を変更する場合のチェックボックス<br />
 ModifyValues: 置換後の値<br />
+PartOrgValue: 部分置換したい値<br />
+PartModValue: 部分置換後の値<br />
+
 <br />
 Button<br />
 Add: Tableに行を追加<br />
